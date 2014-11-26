@@ -10,9 +10,7 @@ package iotGUI.RepositoryPanel
 import scala.swing.Label
 import scala.swing.Swing
 import java.awt.Color
-import iotGUI.cRLObject
-import iotGUI.cRLObject
-import iotGUI.cRLObject
+import iotGUI.cRIObject
 
 /**
  * @author Robert Abatecola
@@ -21,9 +19,14 @@ import iotGUI.cRLObject
 
 class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 {
-	var	borderWeight: Int = inBorderWeight
+	var	borderWeight: Int = 1
+	var selectedBorderWeight: Int = 3
+	var unSelectedBorderWeight: Int = 1
+	var nextOutputChainLabel: RepositoryLabel = null
 
-	protected var myRLItem: cRLObject = null
+	protected var myRLItem: cRIObject = null
+
+	setBorderWeight(inBorderWeight)
 
 	def getHeight(): Int =
 	{
@@ -41,7 +44,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 		border = Swing.LineBorder(java.awt.Color.BLACK, borderWeight)
 	}
 
-	def setRLItem(inRLItem: cRLObject)
+	def setRLItem(inRLItem: cRIObject)
 	{
 		myRLItem  = inRLItem
 		if (myRLItem != null)
@@ -50,7 +53,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 			tooltip = ""
 	}
 
-	def getRLItem(): cRLObject = return myRLItem
+	def getRLItem(): cRIObject = return myRLItem
 
 	text = inText
 	setBorderWeight(inBorderWeight)
@@ -64,5 +67,18 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 		newRL.setRLItem(myRLItem.clone())
 
 		return newRL
+	}
+
+	def selectMe(inSelected: Boolean = true)
+	{
+		if (inSelected)
+			setBorderWeight(selectedBorderWeight)
+		else
+			setBorderWeight(unSelectedBorderWeight)
+	}
+
+	def addInputConnection(inIC: cRIObject)
+	{
+		myRLItem.addInputConnection(inIC)
 	}
 }

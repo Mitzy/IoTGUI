@@ -16,7 +16,7 @@ object eRLType extends Enumeration
 
 import eRLType._
 
-class cRLObject
+class cRIObject
 {
 	var	UID: Long = 0
 	// Repository list information
@@ -27,9 +27,12 @@ class cRLObject
 	var	riName: String = ""
 	var riType: Int = 0
 
-	override def clone(): cRLObject =
+	var	riInputConn: ListBuffer[cRIObject] = new ListBuffer[cRIObject]
+	var riOutputConn: cRIObject = null
+
+	override def clone(): cRIObject =
 	{
-		var newRLO = new cRLObject
+		var newRLO = new cRIObject
 
 		newRLO.UID = UID
 		newRLO.rlType = rlType
@@ -40,27 +43,41 @@ class cRLObject
 
 		return newRLO
 	}
+
+	def addInputConnection(inIC: cRIObject)
+	{
+		riInputConn += inIC
+	}
+
+	def addOutputConnection(inOC: cRIObject)
+	{
+		riOutputConn = inOC
+	}
 }
 
 // Input module should return ListBuffer[cRLObject] that is created in the same way as in rlObjectListMaker
 object rlObjectListMaker
 {
-	var	rlObjectList: ListBuffer[cRLObject] = ListBuffer[cRLObject]()
+	var	rlObjectList: ListBuffer[cRIObject] = ListBuffer[cRIObject]()
 	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
 
 	addToList(1, eRLSection , "Repository")
 	addToList(2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 1)
 	addToList(3, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", 2)
+
 	addToList(4, eRLSection , "Flow Control")
-	addToList(5, eRLItem, "If... Then", "\"If...then\" flow control", 3)
+	addToList(5, eRLItem, "If...then...else", "\"If...then...else\" flow control", 3)
 	addToList(6, eRLItem, "For", "\"For\" flow control", 4)
 	addToList(7, eRLItem, "While", "\"While\" flow control", 5)
 	addToList(8, eRLItem, "End", "End block to mark termination of a loop or If statement", 6)
 	addToList(9, eRLItem, "Wait", "Pause for a specified amount of time before continuing", 7)
 
+	addToList(10, eRLSection , "Output")
+	addToList(11, eRLItem, "Tweet", "Tweet a message via a Twitter account", 8)
+
 	def addToList(inUID: Long, inRLType: eRLType, inRIName: String, inRLToolTip: String = "", inRIType: Int = 0)
 	{
-		var	rlItem: cRLObject = new cRLObject()
+		var	rlItem: cRIObject = new cRIObject()
 		{
 			UID = inUID
 			rlType = inRLType
@@ -75,9 +92,9 @@ object rlObjectListMaker
 object IoTGUIApp extends SimpleSwingApplication
 {
 	var	repositoryLabelList: ListBuffer[RepositoryLabel] = null
-	var	rlObjectList: ListBuffer[cRLObject] = rlObjectListMaker.rlObjectList
+	var	rlObjectList: ListBuffer[cRIObject] = rlObjectListMaker.rlObjectList
 
-	def makeRLList(inRLObjectList: ListBuffer[cRLObject]): ListBuffer[RepositoryLabel] =
+	def makeRLList(inRLObjectList: ListBuffer[cRIObject]): ListBuffer[RepositoryLabel] =
 	{
 		var	repositoryLabelList: ListBuffer[RepositoryLabel] = ListBuffer()
 
@@ -124,7 +141,8 @@ object IoTGUIApp extends SimpleSwingApplication
 
 		leftComponent = new ScrollPane(repositoryPanel)
 //		leftComponent = repositoryPanel
-		rightComponent = stagePanel
+//		rightComponent = stagePanel
+		rightComponent = new ScrollPane(stagePanel)
 	}
 
 	def top = new MainFrame

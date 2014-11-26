@@ -6,6 +6,8 @@ package iotGUI.RepositoryPanel
 import scala.swing._
 import scala.swing.event._
 import java.awt.datatransfer.{DataFlavor, Transferable}
+import iotGUI.StagePanel._
+import com.sun.tools.corba.se.idl.RepositoryID
 
 /**
  * @author Robert Abatecola
@@ -16,6 +18,12 @@ object RepositoryItemLabel
 {
 	var riDataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=iotGUI.RepositoryPanel.RepositoryItemLabel", "Repository Item Flavor");
 	var myDataFlavors: Array[DataFlavor] = Array(riDataFlavor)
+}
+
+class RILEvent(inEvent: InputEvent, inSource: RepositoryItemLabel) extends scala.swing.event.Event
+{
+	var	myEvent: InputEvent = inEvent
+	var source: RepositoryItemLabel = inSource
 }
 
 class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends RepositoryLabel(inText, inBorderWeight) with Transferable
@@ -52,20 +60,12 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 	reactions +=
 	{
 		case e:MouseDragged =>
-			if (dragstart != null)
-			{
-				var currentLocation: Point = peer.getLocation()
-
-//				println("e.point = " + e.point)
-				println("\"" + this.text + "\"" + " peer location = " + peer.getLocation())
-
-				peer.setLocation(currentLocation.x - dragstart.x + e.point.x, currentLocation.y - dragstart.y + e.point.y)
-			}
+			publish(new RILEvent(e, this))
 
 		case e:MousePressed =>
-			dragstart = e.point
+			publish(new RILEvent(e, this))
 
 		case e:MouseReleased =>
-			dragstart = null    
+			publish(new RILEvent(e, this))
 	}
 }
