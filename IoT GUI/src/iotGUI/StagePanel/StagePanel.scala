@@ -8,7 +8,7 @@ import javax.swing.TransferHandler._
 import java.awt.{Color, geom}
 import iotGUI.RepositoryPanel._
 import iotGUI.NULLPanel
-import iotGUI.cRIObject
+import iotGUI.ExecutionEngine._
 import com.sun.jmx.mbeanserver.Repository
 import com.sun.org.apache.bcel.internal.util.Repository
 
@@ -23,7 +23,7 @@ class StagePanel extends NULLPanel
 	var path = new geom.GeneralPath
 	var	connectionPath = new geom.GeneralPath
 	// Head of repository item output chain
-	var riHead: cRIObject = null
+	var riHead: ProcessNode = null
 	// Head of GUI labels corresponding to the RI output chain
 	var rlHead: RepositoryLabel = null
 

@@ -10,7 +10,7 @@ package iotGUI.RepositoryPanel
 import scala.swing.Label
 import scala.swing.Swing
 import java.awt.Color
-import iotGUI.cRIObject
+import iotGUI.ExecutionEngine._
 
 /**
  * @author Robert Abatecola
@@ -24,7 +24,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 	var unSelectedBorderWeight: Int = 1
 	var nextOutputChainLabel: RepositoryLabel = null
 
-	protected var myRLItem: cRIObject = null
+	protected var myRLItem: ProcessNode = null
 
 	setBorderWeight(inBorderWeight)
 
@@ -44,7 +44,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 		border = Swing.LineBorder(java.awt.Color.BLACK, borderWeight)
 	}
 
-	def setRLItem(inRLItem: cRIObject)
+	def setRLItem(inRLItem: ProcessNode)
 	{
 		myRLItem  = inRLItem
 		if (myRLItem != null)
@@ -53,7 +53,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 			tooltip = ""
 	}
 
-	def getRLItem(): cRIObject = return myRLItem
+	def getRLItem(): ProcessNode = return myRLItem
 
 	text = inText
 	setBorderWeight(inBorderWeight)
@@ -72,12 +72,18 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 	def selectMe(inSelected: Boolean = true)
 	{
 		if (inSelected)
-			setBorderWeight(selectedBorderWeight)
+		{
+//			setBorderWeight(selectedBorderWeight)
+			background = Color.CYAN
+		}
 		else
-			setBorderWeight(unSelectedBorderWeight)
+		{
+//			setBorderWeight(unSelectedBorderWeight)
+			background = Color.WHITE
+		}
 	}
 
-	def addInputConnection(inIC: cRIObject)
+	def addInputConnection(inIC: ProcessNode)
 	{
 		myRLItem.addInputConnection(inIC)
 	}
