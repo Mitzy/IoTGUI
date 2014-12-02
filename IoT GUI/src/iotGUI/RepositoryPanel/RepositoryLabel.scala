@@ -3,10 +3,6 @@
  */
 package iotGUI.RepositoryPanel
 
-//import javax.swing._
-//import scala.swing.Alignment
-//import scala.swing.Swing._
-
 import scala.swing.Label
 import scala.swing.Swing
 import java.awt.Color
