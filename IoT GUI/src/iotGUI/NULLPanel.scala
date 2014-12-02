@@ -4,7 +4,6 @@
 package iotGUI
 
 import swing._
-import com.sun.jmx.mbeanserver.Repository
 import iotGUI.RepositoryPanel.RepositoryLabel
 
 /**

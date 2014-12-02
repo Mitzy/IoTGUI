@@ -7,7 +7,6 @@ import scala.swing._
 import scala.swing.event._
 import java.awt.datatransfer.{DataFlavor, Transferable}
 import iotGUI.StagePanel._
-import com.sun.tools.corba.se.idl.RepositoryID
 
 /**
  * @author Robert Abatecola
