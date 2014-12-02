@@ -3,15 +3,10 @@
  */
 package iotGUI.RepositoryPanel
 
-//import scala.swing.Swing
 import scala.swing._
 import scala.swing.event._
 import scala.swing.Insets
-import scala.swing.GridBagPanel
-import scala.swing.GridBagPanel._
 import scala.swing.Label
-//import scala.swing.GridPanel
-//import scala.swing.Orientation._
 
 /**
  * @author Robert Abatecola
@@ -58,41 +53,5 @@ class RepositoryPanel extends GridBagPanel
 
 		layout -= emptyLabel
 		layout(emptyLabel) = c
-	}
-
-	def	addSectionLabel(inSL: RepositorySectionLabel)
-	{
-		val c = new Constraints
-
-		c.weightx = 0.5
-//		c.ipadx = 1
-		c.insets = new Insets(1, 1, 1, 1)
-
-		c.fill = Fill.Horizontal
-		c.gridx = 0;
-		c.gridy = lastY;
-		layout(inSL) = c
-		lastY += 1
-
-		resetEmptyLabel()
-	}
-
-	def addItemLabel(inIL: RepositoryItemLabel)
-	{
-		val c = new Constraints
-
-		c.weightx = 0.5
-//		c.ipadx = 1
-		c.insets = new Insets(1, 1, 1, 1)
-
-		c.fill = Fill.Horizontal
-		c.gridx = 0;
-		c.gridy = lastY;
-		layout(inIL) = c
-		lastY += 1
-
-		resetEmptyLabel()
-
-		listenTo(inIL)
 	}
 }
