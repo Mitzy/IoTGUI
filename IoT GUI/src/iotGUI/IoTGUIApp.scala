@@ -63,7 +63,7 @@ object IoTGUIApp extends SimpleSwingApplication
 				case `eRLSection` => new RepositorySectionLabel(rlItem.riName)
 				case `eRLItem` => new RepositoryItemLabel(rlItem.riName)
 			}
-			myRepoLabel.setRLItem(rlItem)
+			myRepoLabel.setProcessNode(rlItem)
 			repositoryLabelList += myRepoLabel
 		}
 
@@ -81,7 +81,7 @@ object IoTGUIApp extends SimpleSwingApplication
 			peer.setDragEnabled(true)
 			visible = true
 			peer.setSize(10, 100)
-			renderer = ListView.Renderer(_.getRLItem().riName)
+			renderer = ListView.Renderer(_.getProcessNode().riName)
 		}
 
 		val	stagePanel = new StagePanel

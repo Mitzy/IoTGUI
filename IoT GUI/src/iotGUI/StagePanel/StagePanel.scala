@@ -9,8 +9,10 @@ import java.awt.{Color, geom}
 import iotGUI.RepositoryPanel._
 import iotGUI.NULLPanel
 import iotGUI.ExecutionEngine._
-import com.sun.jmx.mbeanserver.Repository
-import com.sun.org.apache.bcel.internal.util.Repository
+import eRLZoneType._
+//import com.sun.jmx.mbeanserver.Repository
+//import com.sun.org.apache.bcel.internal.util.Repository
+//import java.lang.Boolean
 
 class StagePanel extends NULLPanel
 {
@@ -19,13 +21,12 @@ class StagePanel extends NULLPanel
 	var selectedRL: RepositoryItemLabel = null
 	var	startPoint: Point = null
 	var dragstart: Point = null
-	/* records the dragging */
+	// records the dragging
 	var path = new geom.GeneralPath
 	var	connectionPath = new geom.GeneralPath
-	// Head of repository item output chain
-	var riHead: ProcessNode = null
-	// Head of GUI labels corresponding to the RI output chain
-	var rlHead: RepositoryLabel = null
+	// Connection creation vars
+	var	connectDragging: Boolean = false
+	var clickedItem: RepositoryItemLabel = null
 
 	border = Swing.LineBorder(java.awt.Color.BLACK)
 	peer.setTransferHandler(mySPTG)
@@ -50,17 +51,17 @@ class StagePanel extends NULLPanel
 
 		case e:MousePressed =>
 			selectRL(null)
-			println(e.toString)
-			startPoint = e.point
+//			println(e.toString)
+//			startPoint = e.point
   			requestFocusInWindow()
-			println(e.asInstanceOf[scala.swing.event.MouseEvent].peer.isConsumed())
+//			println(e.asInstanceOf[scala.swing.event.MouseEvent].peer.isConsumed())
 
 		case e:MouseDragged  =>
-			lineTo(e.point)
-			println(e.source)
+//			lineTo(e.point)
+//			println(e.source)
 
-		case e:MouseReleased =>
-			lineTo(e.point)
+//		case e:MouseReleased =>
+//			lineTo(e.point)
 
 		case KeyTyped(_,'c',_,_) => 
 			path = new geom.GeneralPath
@@ -70,27 +71,75 @@ class StagePanel extends NULLPanel
 			moveItem(selectedRL, e)
 
 		case e:RILEvent =>
+			var myRIL = e.source
 			e.myEvent match
 			{
+				case e2:MouseClicked =>
+					if (e2.clicks == 2)
+						println("Got double-clicked")
+
 				case e2:MouseDragged =>
 					repaint
 					if (dragstart != null)
 					{
 						var currentLocation: Point = e.source.peer.getLocation()
-		
+
 //						println("e2.point = " + e2.point)
-						println("\"" + e.source.peer.getText() + "\"" + " peer location = " + e.source.peer.getLocation())
+//						println("\"" + e.source.peer.getText() + "\"" + " peer location = " + e.source.peer.getLocation())
 		
 						e.source.peer.setLocation(currentLocation.x - dragstart.x + e2.point.x, currentLocation.y - dragstart.y + e2.point.y)
+					}
+					if (connectDragging)
+					{
+						var endPoint = e2.point
+/*
+			  			println("start loc: " + startPoint)
+			  			println("drag loc: " + e2.point)
+			  			println("clickedItem loc: " + clickedItem.location)
+			  			println("clickedItem w, h: " + clickedItem.getWidth() + ", " + clickedItem.getHeight())
+*/
+						endPoint.setLocation(startPoint.getX() + endPoint.getX() - clickedItem.getWidth(), startPoint.getY() + endPoint.getY() - (clickedItem.getHeight() / 2))
+						lineTo(endPoint)
 					}
 	
 				case e2:MousePressed =>
 					requestFocusInWindow()
-					dragstart = e2.point
-					selectRL(e.source)
+					if (myRIL.mouseClickedZone == eRLZOutputHandle)
+					{
+						connectDragging = true;
+						clickedItem = e.source
+						startPoint = e2.point
+						startPoint.setLocation(clickedItem.location.getX() + clickedItem.getWidth, clickedItem.location.getY() + clickedItem.getHeight / 2)
+			  			requestFocusInWindow()
+//			  			println("click loc: " + e2.point)
+//			  			println("startPoint: " + startPoint)
+					}
+					else
+					{
+						dragstart = e2.point
+						selectRL(e.source)
+					}
 	
 				case e2:MouseReleased =>
+					if (connectDragging)
+					{
+						var endPoint = e2.point
+						var releasedItem: RepositoryItemLabel = null
+
+						endPoint.setLocation(startPoint.getX() + endPoint.getX() - clickedItem.getWidth(), startPoint.getY() + endPoint.getY() - (clickedItem.getHeight() / 2))
+
+						releasedItem = getComponentHere(endPoint)
+						if (releasedItem != null)
+						{
+							clickedItem.nextOutputChainLabel = releasedItem
+							clickedItem.getProcessNode.addOutputConnection(releasedItem.getProcessNode)
+							releasedItem.getProcessNode.addInputConnection(clickedItem.getProcessNode)
+						}
+						path = new geom.GeneralPath
+						repaint()
+					}
 					dragstart = null
+					connectDragging = false
 			}
 
 		case _: FocusLost => repaint()
@@ -155,17 +204,49 @@ class StagePanel extends NULLPanel
 
 	override def paintComponent(g: Graphics2D)
 	{
+		g.clearRect(0, 0, this.bounds.getWidth.toInt, this.bounds.getHeight.toInt)
 		super.paintComponent(g)
 		g.setColor(new Color(100,100,100))
-		g.drawString("Press left mouse button and drag to paint." + 
-		(if (hasFocus) " Press 'c' to clear." else ""), 10, size.height-10)
+//		g.drawString("Press left mouse button and drag to paint." + 
+//		(if (hasFocus) " Press 'c' to clear." else ""), 10, size.height-10)
 		g.setColor(Color.black)
 		g.draw(path)
 
+
+		var rilItem: RepositoryItemLabel = null
+		connectionPath = new geom.GeneralPath
+		for (thing <- contents)
+		{
+			rilItem = thing match
+			{
+				case x:RepositoryItemLabel => x
+				case _ => null
+			}
+			if (rilItem != null)
+			{
+				var outputRLItem: RepositoryItemLabel = rilItem.nextOutputChainLabel
+				if (outputRLItem != null)
+				{
+					var startPt: Point = rilItem.peer.getLocation()
+					var	endPt: Point = outputRLItem.peer.getLocation()
+	
+					startPt.x += rilItem.peer.getWidth() - 1
+					startPt.y += rilItem.peer.getHeight() / 2
+	
+					endPt.x += 1
+					endPt.y += outputRLItem.peer.getHeight() / 2
+	
+					connectionPath.moveTo(startPt.x, startPt.y)
+					connectionPath.lineTo(endPt.x, endPt.y)
+				}
+			}
+		}
+		g.draw(connectionPath)
+/*
 		if (rlHead != null)
 		{
 			var rlItem = rlHead
-			var outputRLItem: RepositoryLabel = null
+			var outputRLItem: RepositoryItemLabel = null
 
 			connectionPath = new geom.GeneralPath
 
@@ -190,26 +271,52 @@ class StagePanel extends NULLPanel
 			}
 			g.draw(connectionPath)
 		}
+*/
+	}
+
+	def getComponentHere(inPoint: Point): RepositoryItemLabel =
+	{
+//		var rItem: RepositoryItemLabel = rlHead
+		var lastHitItem: RepositoryItemLabel = null
+		var hitCount: Int = 0
+
+//		println("getComponentHere: inPoint = ", inPoint)
+		var rilItem: RepositoryItemLabel = null
+		for (thing <- contents)
+		{
+			rilItem = thing match
+			{
+				case x:RepositoryItemLabel => x
+				case _ => null
+			}
+			if (rilItem != null)
+			{
+				if (rilItem.peer.bounds.contains(inPoint))
+				{
+					hitCount += 1
+					lastHitItem = rilItem
+				}
+			}
+		}
+
+		println("getComponentHere: point is in " + hitCount + " item" + (if (hitCount != 1) "s" else ""))
+
+		return lastHitItem
 	}
 
 	// Test drawing line between the two most recently added items
-	var	lastAdded: RepositoryLabel = null
+//	var	lastAdded: RepositoryItemLabel = null
 
 	def add(comp: RepositoryItemLabel, x: Int, y: Int): Unit =
 	{
 		super.add(comp, x, y, 3, 1)
 
-		if (riHead == null)
-			riHead = comp.getRLItem
-		if (rlHead == null)
-			rlHead = comp
-
 		listenTo(comp)
-
+/*
 		if (lastAdded != null)
 		{
-			lastAdded.getRLItem.addOutputConnection(comp.getRLItem)
-			comp.getRLItem.addInputConnection(lastAdded.getRLItem)
+//			lastAdded.getRLItem.addOutputConnection(comp.getRLItem)
+//			comp.getRLItem.addInputConnection(lastAdded.getRLItem)
 
 //			connectionPath = new geom.GeneralPath
 //			connectionPath.moveTo(lastAdded.peer.getLocation().x, lastAdded.peer.getLocation().y)
@@ -219,6 +326,7 @@ class StagePanel extends NULLPanel
 			lastAdded.nextOutputChainLabel = comp
 		}
 		lastAdded = comp
+*/
 
 //		return super.add(comp, x, y)
 	}

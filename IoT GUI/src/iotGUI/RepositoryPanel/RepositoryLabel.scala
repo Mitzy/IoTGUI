@@ -18,9 +18,19 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 	var	borderWeight: Int = 1
 	var selectedBorderWeight: Int = 3
 	var unSelectedBorderWeight: Int = 1
-	var nextOutputChainLabel: RepositoryLabel = null
 
-	protected var myRLItem: ProcessNode = null
+	protected var myProcessNode: ProcessNode = null
+
+	def setProcessNode(inProcessNode: ProcessNode)
+	{
+		myProcessNode  = inProcessNode
+		if (myProcessNode != null)
+			tooltip = myProcessNode.rlToolTip
+		else
+			tooltip = ""
+	}
+
+	def getProcessNode(): ProcessNode = return myProcessNode
 
 	setBorderWeight(inBorderWeight)
 
@@ -40,17 +50,6 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 		border = Swing.LineBorder(java.awt.Color.BLACK, borderWeight)
 	}
 
-	def setRLItem(inRLItem: ProcessNode)
-	{
-		myRLItem  = inRLItem
-		if (myRLItem != null)
-			tooltip = myRLItem.rlToolTip
-		else
-			tooltip = ""
-	}
-
-	def getRLItem(): ProcessNode = return myRLItem
-
 	text = inText
 	setBorderWeight(inBorderWeight)
 	background = Color.WHITE
@@ -60,7 +59,7 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 	{
 		var newRL = new RepositoryLabel(text, borderWeight)
 
-		newRL.setRLItem(myRLItem.clone())
+		newRL.setProcessNode(myProcessNode.clone())
 
 		return newRL
 	}
@@ -81,6 +80,6 @@ class RepositoryLabel(inText: String, inBorderWeight: Int) extends Label
 
 	def addInputConnection(inIC: ProcessNode)
 	{
-		myRLItem.addInputConnection(inIC)
+		myProcessNode.addInputConnection(inIC)
 	}
 }
