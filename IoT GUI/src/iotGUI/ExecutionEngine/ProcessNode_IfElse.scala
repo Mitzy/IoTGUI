@@ -28,7 +28,10 @@ class ProcessNode_IfElse extends ProcessNode
     // This is where the process runs
     override def processNode(): ProcessNode =
     {
-        // check for IfConditon and ElseCondition
+		println("Executing if/then/else node")
+
+/*
+		// check for IfConditon and ElseCondition
         action match
         {
             case 1 =>
@@ -36,10 +39,24 @@ class ProcessNode_IfElse extends ProcessNode
             case 2 =>
                 ElseCondition()
          }
-        
+*/
+
         return super.processNode()
     }
 
+    override def clone(): ProcessNode =
+    {
+		var newRLO = new ProcessNode_IfElse
+
+		newRLO.UID = UID
+		newRLO.rlType = rlType
+		newRLO.rlSectionID = rlSectionID
+		newRLO.rlToolTip = rlToolTip
+		newRLO.riName = riName
+		newRLO.riType =riType
+
+		return newRLO
+    }
 
     def IfCondition(): Int =
     {
