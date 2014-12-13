@@ -1,12 +1,14 @@
 package iotGUI.ExecutionEngine
 
-class Process (inPN: ProcessNode) {
+object Process {
 	
-	var firstNode: ProcessNode = null
-	firstNode = inPN
+	//var firstNode: ProcessNode = null
+	//firstNode = inPN
 	
-	def runProcess()
+	def runProcess(firstNode: Any)
 	{
+		println("In runProcess")
+
 		return
 	}
 	

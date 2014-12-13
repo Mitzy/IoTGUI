@@ -2,6 +2,8 @@ package iotGUI.ExecutionEngine
 
 import scala.collection.mutable.ListBuffer
 
+import iotGUI.Output._
+
 object eRLType extends Enumeration
 {
 	type eRLType = Value
@@ -54,7 +56,23 @@ class ProcessNode
 	{
 		var aNode: ProcessNode = riOutputConn
 		var resultNode: ProcessNode = null
-
+		
+		this.riType match {
+			case 1 =>
+				println("Starting execution")
+			case 2 =>
+				println("Connecting to sensor")
+			case 3 =>
+				println("Reading from sensor")
+			case 11 =>
+				println("Sending tweet")
+				OutputNode_Twitter.SendTweet("Alert!")
+			case 12 =>
+				println("Debug output")
+			case _ =>
+				println("Executing process node")
+		}
+		
 		if (aNode != null)
 		{
 			resultNode = aNode.processNode()

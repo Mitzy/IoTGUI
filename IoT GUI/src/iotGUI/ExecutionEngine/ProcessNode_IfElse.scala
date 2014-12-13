@@ -28,16 +28,13 @@ class ProcessNode_IfElse extends ProcessNode
     // This is where the process runs
     override def processNode(): ProcessNode =
     {
-    	var x = 20
         // check for IfConditon and ElseCondition
         action match
         {
             case 1 =>
-                //IfCondition()
-            	if(x < 20)
-            		super.processNode()
+                IfCondition()
             case 2 =>
-                //ElseCondition()
+                ElseCondition()
          }
         
         return super.processNode()

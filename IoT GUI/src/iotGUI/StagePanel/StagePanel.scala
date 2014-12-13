@@ -178,6 +178,10 @@ class StagePanel extends NULLPanel
 			case Key.Down =>
 				currLoc.y += increment
 
+			case Key.S =>
+				println("Start pressed")
+				inItem.getProcessNode().processNode()
+			
 			case _ =>
 				// Do nothing for other values
 		}
@@ -308,7 +312,7 @@ class StagePanel extends NULLPanel
 			}
 		}
 
-		println("getComponentHere: point is in " + hitCount + " item" + (if (hitCount != 1) "s" else ""))
+		//println("getComponentHere: point is in " + hitCount + " item" + (if (hitCount != 1) "s" else ""))
 
 		return lastHitItem
 	}
@@ -360,7 +364,7 @@ class mySPTransferHandler extends TransferHandler
 		}
 
 		var myTransferable = support.getTransferable()
-		myTransferable.getTransferData(riDataFlavor)
+		//myTransferable.getTransferData(riDataFlavor)
 		var dropLoc = support.getDropLocation()
 
 		var myRILabel: RepositoryItemLabel = myTransferable.getTransferData(riDataFlavor) match

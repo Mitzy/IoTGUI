@@ -4,6 +4,7 @@ class Sensor
 {
 	def Connect(): Int =
 	{
+		println("Connecting to sensor")
 		return 0
 	}
 
@@ -27,7 +28,7 @@ class Sensor
 class ProcessNode_Sensor extends ProcessNode
 {
 	var	action: Int = 0
-	var mySensor: Sensor = null
+	var mySensor: Sensor = new Sensor()
 
 	// This is where the process runs
 	override def processNode(): ProcessNode =
