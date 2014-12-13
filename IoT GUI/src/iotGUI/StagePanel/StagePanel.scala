@@ -230,19 +230,13 @@ class StagePanel extends NULLPanel
 			if (rilItem != null)
 			{
 				var outputRLList: ListBuffer[RepositoryItemLabel] = rilItem.getAllOutputs()
-//				var outputRLItem: RepositoryItemLabel = rilItem.outputChainLabel
-//				var outputRLItem: RepositoryItemLabel = null
 				for (outputRLItem <- outputRLList)
 				{
-//					var outputRLItem: RepositoryItemLabel = _
-//				}
 					if (outputRLItem != null)
 					{
 						var startPt: Point = rilItem.peer.getLocation()
 						var	endPt: Point = outputRLItem.peer.getLocation()
-	//					var	startZoneLoc: Point = rilItem.getZoneLocation(eRLZOutputHandle)
 						var	startZoneLoc: Point = rilItem.getZoneLocationByConnectedItem(outputRLItem)
-	//					var	endZoneLoc: Point = outputRLItem.getZoneLocation(eRLZInputHandle)
 						var	endZoneLoc: Point = outputRLItem.getZoneLocation(eRLZInputHandle)
 	
 						startPt.x += startZoneLoc.x
@@ -292,7 +286,6 @@ class StagePanel extends NULLPanel
 
 	def getComponentHere(inPoint: Point): RepositoryItemLabel =
 	{
-//		var rItem: RepositoryItemLabel = rlHead
 		var lastHitItem: RepositoryItemLabel = null
 		var hitCount: Int = 0
 

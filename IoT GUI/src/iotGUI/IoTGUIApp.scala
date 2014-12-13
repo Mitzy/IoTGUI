@@ -17,16 +17,16 @@ import iotGUI.ExecutionEngine.eRLType._
 object rlObjectListMaker
 {
 	var	rlObjectList: ListBuffer[ProcessNode] = ListBuffer[ProcessNode]()
-///	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
+//	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
 
-	addToList(1, eRLSection , "Repository")
+	addToList(1, eRLSection, "Repository")
 	addToList(2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 1)
 	addToList(3, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", 2)
 	addToList(4, eRLItem, "Sensor Group Conn.", "Connect or disconnect a group of sensors", 3)
 	addToList(5, eRLItem, "Sensor Group Read/Write", "Read from or write to a group of connected sensors", 4)
 
-	addToList(6, eRLSection , "Flow Control")
-	addToList(7, eRLIfThenElse , "If...then...else", "\"If...then...else\" flow control", 5)
+	addToList(6, eRLSection, "Flow Control")
+	addToList(7, eRLIfThenElse, "If...then...else", "\"If...then...else\" flow control", 5)
 	addToList(8, eRLItem, "For", "\"For\" flow control", 6)
 	addToList(9, eRLItem, "While", "\"While\" flow control", 7)
 	addToList(10, eRLItem, "End", "End block to mark termination of a loop or If statement", 8)
@@ -38,13 +38,20 @@ object rlObjectListMaker
 	def addToList(inUID: Long, inRLType: eRLType, inRIName: String, inRLToolTip: String = "", inRIType: Int = 0)
 	{
 		var	rlItem: ProcessNode = new ProcessNode()
+
+		rlItem = inRLType match
 		{
-			UID = inUID
-			rlType = inRLType
-			rlToolTip  = inRLToolTip
-			riName = inRIName
-			riType = inRIType
+			case `eRLIfThenElse` => new ProcessNode_IfElse
+//			case `eRLFor` => new ProcessNode_For
+			case _ => new ProcessNode
 		}
+
+		rlItem.UID = inUID
+		rlItem.rlType = inRLType
+		rlItem.rlToolTip  = inRLToolTip
+		rlItem.riName = inRIName
+		rlItem.riType = inRIType
+
 		rlObjectList += rlItem
 	}
 }

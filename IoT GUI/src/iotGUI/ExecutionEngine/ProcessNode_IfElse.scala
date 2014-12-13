@@ -23,6 +23,7 @@ class ProcessNode_IfElse extends ProcessNode
 {
     var    action: Int = 0
     var myIfElse: IfElse = null
+	var riElseOutputConn: ProcessNode = null
 
     // This is where the process runs
     override def processNode(): ProcessNode =
