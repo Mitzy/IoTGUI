@@ -66,9 +66,11 @@ class ProcessNode
 				println("Reading from sensor")
 			case 11 =>
 				println("Sending tweet")
-				OutputNode_Twitter.SendTweet("Hello World!")
+				OutputNode_Twitter.SendTweet("Alert!")
 			case 12 =>
-				println("Debug line")
+				println("Debug output")
+			case _ =>
+				println("Executing process node")
 		}
 		
 		if (aNode != null)
