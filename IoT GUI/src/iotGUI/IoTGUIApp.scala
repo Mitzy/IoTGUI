@@ -1,10 +1,12 @@
 package iotGUI
 
 import scala.swing._
+
 import scala.swing.Orientation._
 import scala.collection.mutable.ListBuffer
 import scala.reflect.runtime
 import scala.tools.reflect.ToolBox
+import scala.swing.event._
 import iotGUI.RepositoryPanel._
 import iotGUI.StagePanel._
 import iotGUI.ExecutionEngine._
@@ -15,7 +17,7 @@ import iotGUI.ExecutionEngine.eRLType._
 object rlObjectListMaker
 {
 	var	rlObjectList: ListBuffer[ProcessNode] = ListBuffer[ProcessNode]()
-//	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
+///	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
 
 	addToList(1, eRLSection , "Repository")
 	addToList(2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 1)
@@ -96,6 +98,29 @@ object IoTGUIApp extends SimpleSwingApplication
 			}
 //			add(label, 10, 20)
 			add(label, peer.getPreferredSize().getWidth().toInt / 2, (peer.getHeight() - label.peer.getHeight()) / 2 + peer.getLocation().y)
+			
+			val button = new Button
+			{
+				text = "RUN"
+            }
+            add(button,500,50)
+            listenTo(button)
+
+            reactions += {
+            case ButtonClicked(button) =>
+                 println("Event Trigerred:")
+                 background=java.awt.Color.GREEN
+                 var processnode1= new iotGUI.ExecutionEngine.ProcessNode_Sensor()
+                 var connect1=processnode1.ConnectSensor
+                 println(connect1)
+                 if(connect1==0) {
+                	 var step1=new iotGUI.ExecutionEngine.ProcessNode_IfElse()
+                     var checkcondtion=step1.action
+                 } else {
+                	 printf("Error Occured while connecting to sensor")
+                	 sys.exit
+                 }
+            }
 		}
 
 		leftComponent = new ScrollPane(repositoryPanel)
