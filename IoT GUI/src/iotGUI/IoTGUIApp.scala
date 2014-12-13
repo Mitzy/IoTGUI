@@ -15,7 +15,7 @@ import iotGUI.ExecutionEngine.eRLType._
 object rlObjectListMaker
 {
 	var	rlObjectList: ListBuffer[ProcessNode] = ListBuffer[ProcessNode]()
-	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
+//	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
 
 	addToList(1, eRLSection , "Repository")
 	addToList(2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 1)
@@ -24,7 +24,7 @@ object rlObjectListMaker
 	addToList(5, eRLItem, "Sensor Group Read/Write", "Read from or write to a group of connected sensors", 4)
 
 	addToList(6, eRLSection , "Flow Control")
-	addToList(7, eRLItem, "If...then...else", "\"If...then...else\" flow control", 5)
+	addToList(7, eRLIfThenElse , "If...then...else", "\"If...then...else\" flow control", 5)
 	addToList(8, eRLItem, "For", "\"For\" flow control", 6)
 	addToList(9, eRLItem, "While", "\"While\" flow control", 7)
 	addToList(10, eRLItem, "End", "End block to mark termination of a loop or If statement", 8)
@@ -62,6 +62,7 @@ object IoTGUIApp extends SimpleSwingApplication
 			{
 				case `eRLSection` => new RepositorySectionLabel(rlItem.riName)
 				case `eRLItem` => new RepositoryItemLabel(rlItem.riName)
+				case `eRLIfThenElse` => new RIL_IfThenElse(rlItem.riName)
 			}
 			myRepoLabel.setProcessNode(rlItem)
 			repositoryLabelList += myRepoLabel

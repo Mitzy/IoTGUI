@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 object eRLType extends Enumeration
 {
 	type eRLType = Value
-	val	eRLSection, eRLItem = Value
+	val	eRLSection, eRLItem, eRLSensorConn, eRLSensorReadWrite, eRLGroupConn, eRLGroupReadWrite, eRLIfThenElse, eRLFor, eRLWhile, eRLEnd, eRLWait, eRLTweet = Value
 }
 
 import eRLType._
