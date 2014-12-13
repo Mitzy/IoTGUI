@@ -7,8 +7,8 @@ import twitter4j.TwitterFactory
 import twitter4j.Twitter
 import twitter4j.conf.ConfigurationBuilder
 
-class OutputNode_Twitter {
-	def SendTweet(): Int =
+object OutputNode_Twitter {
+	def SendTweet(str: String): Int =
 	{
 		// Config and create a twitter object
 	    val cb = new ConfigurationBuilder()
@@ -22,8 +22,7 @@ class OutputNode_Twitter {
 	
 	    // Use the twitter object to post a tweet
 	    val now = new Date
-	    val result = twitter.updateStatus("Alert! " + now);
-	    //System.out.println("Tweet sent")
+	    val result = twitter.updateStatus(str + " " + now);
 	    
 	    return 0
 	}
