@@ -5,9 +5,10 @@ package iotGUI.RepositoryPanel
 
 import scala.swing._
 import scala.swing.event._
+import scala.collection.mutable.ListBuffer
 import java.awt.datatransfer.{DataFlavor, Transferable}
-import iotGUI.StagePanel._
-import iotGUI.ExecutionEngine._
+//import iotGUI.StagePanel._
+//import iotGUI.ExecutionEngine._
 
 /**
  * @author Robert Abatecola
@@ -17,7 +18,7 @@ import iotGUI.ExecutionEngine._
 object eRLZoneType extends Enumeration
 {
 	type eRLZoneType = Value
-	val	eRLZBody, eRLZInputHandle, eRLZOutputHandle, eRLZNone = Value
+	val	eRLZBody, eRLZInputHandle, eRLZOutputHandle, eRLZElseHandle, eRLZNone = Value
 }
 
 import eRLZoneType._
@@ -39,7 +40,8 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 	var dragstart: Point = null
 	var	mouseClickedZone: eRLZoneType = eRLZNone
 	var	mouseReleasedZone: eRLZoneType = eRLZNone
-	var nextOutputChainLabel: RepositoryItemLabel = null
+	var outputChainLabel: RepositoryItemLabel = null
+	var inputChainLabel: RepositoryItemLabel = null
 
 	override def clone(): RepositoryItemLabel =
 	{
@@ -67,20 +69,81 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 		return flavor.equals(RepositoryItemLabel.riDataFlavor)
 	}
 
+	def addInputConnection(inRIL: RepositoryItemLabel)
+	{
+		inputChainLabel = inRIL
+		getProcessNode.addInputConnection(inRIL.getProcessNode)
+	}
+
+	def addOutputConnection(inRIL: RepositoryItemLabel, inZone: eRLZoneType = eRLZNone)
+	{
+		if (inZone == eRLZOutputHandle)
+		{
+			outputChainLabel = inRIL
+			getProcessNode.addOutputConnection(inRIL.getProcessNode)
+		}
+	}
+
 	def getZone(inPoint: Point): eRLZoneType =
 	{
+		var peerBounds: Rectangle = peer.bounds()
+		var peerLoc: Point = peer.location()
 //		println("point: " + inPoint)
 		if (inPoint.getX() > peer.bounds.getWidth() - 15)
 		{
 			return eRLZOutputHandle
 		}
 
-		if (inPoint.getX() < peer.location().x + 15)
+		if (inPoint.getX() < + 15)
 		{
 			return eRLZInputHandle
 		}
 
 		return eRLZBody
+	}
+
+	def getZoneByConnectedItem(inRIL: RepositoryItemLabel): eRLZoneType =
+	{
+		if (inRIL == outputChainLabel)
+			return eRLZOutputHandle
+
+		if (inRIL == inputChainLabel)
+			return eRLZInputHandle
+
+		return eRLZNone
+	}
+
+	def getAllOutputs(): ListBuffer[RepositoryItemLabel] =
+	{
+		var	myOutputs: ListBuffer[RepositoryItemLabel] = new ListBuffer[RepositoryItemLabel]
+
+		myOutputs += outputChainLabel
+	}
+
+	def getZoneLocation(inZone: eRLZoneType): Point =
+	{
+		var	zoneLoc: Point = new Point
+
+		inZone match
+		{
+			case `eRLZInputHandle` =>
+				zoneLoc.setLocation(1, getHeight() / 2)
+
+			case `eRLZOutputHandle` =>
+				zoneLoc.setLocation(getWidth(), getHeight() / 2)
+
+			case _ =>
+				zoneLoc.setLocation(this.location)
+		}
+
+		return zoneLoc
+	}
+
+	def getZoneLocationByConnectedItem(inRIL: RepositoryItemLabel): Point =
+	{
+		var	theZone: eRLZoneType = getZoneByConnectedItem(inRIL)
+
+		return getZoneLocation(theZone)
 	}
 
 	listenTo(mouse.clicks, mouse.moves)
@@ -93,14 +156,14 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 //				Dialog.showMessage(this, "Thank you!", title="You double-clicked me")
 //				Dialog.showOptions(this, "Thank you!", title="You double-clicked me", optionType = Dialog.Options.YesNo, messageType = Dialog.Message.Question, icon = scala.swing.Swing.EmptyIcon, List("Yes", "No", "Hi!"), initial = 1)
 
-import javax.swing.JOptionPane
+				import javax.swing.JOptionPane
 				var answer = JOptionPane.showInputDialog(this.peer, 
-				        "What is your favorite pizza?",
-				        "Favorite Pizza",
+				        "Select sensor",
+				        "Select sensor",
 				        JOptionPane.QUESTION_MESSAGE, 
 				        null, 
-				        Array("Cheese", "Pepperoni", "Sausage", "Veggie"), 
-				        "Cheese");
+				        Array("Temp01", "Temp02", "Gas01", "Gas02"), 
+				        "Gas02");
 
 				println("Answer is '" + answer + "'")
 				publish(new RILEvent(e, this))

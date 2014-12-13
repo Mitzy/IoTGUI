@@ -5,6 +5,7 @@ import scala.swing._
 import scala.swing.event._
 import javax.swing.TransferHandler
 import javax.swing.TransferHandler._
+import scala.collection.mutable.ListBuffer
 import java.awt.{Color, geom}
 import iotGUI.RepositoryPanel._
 import iotGUI.NULLPanel
@@ -82,34 +83,37 @@ class StagePanel extends NULLPanel
 					repaint
 					if (dragstart != null)
 					{
-						var currentLocation: Point = e.source.peer.getLocation()
+						var currentLocation: Point = myRIL.peer.getLocation()
 
 //						println("e2.point = " + e2.point)
 //						println("\"" + e.source.peer.getText() + "\"" + " peer location = " + e.source.peer.getLocation())
 		
-						e.source.peer.setLocation(currentLocation.x - dragstart.x + e2.point.x, currentLocation.y - dragstart.y + e2.point.y)
+						myRIL.peer.setLocation(currentLocation.x - dragstart.x + e2.point.x, currentLocation.y - dragstart.y + e2.point.y)
 					}
 					if (connectDragging)
 					{
 						var endPoint = e2.point
+						var	zoneLoc: Point = myRIL.getZoneLocation(myRIL.mouseClickedZone)
 /*
 			  			println("start loc: " + startPoint)
 			  			println("drag loc: " + e2.point)
 			  			println("clickedItem loc: " + clickedItem.location)
 			  			println("clickedItem w, h: " + clickedItem.getWidth() + ", " + clickedItem.getHeight())
 */
-						endPoint.setLocation(startPoint.getX() + endPoint.getX() - clickedItem.getWidth(), startPoint.getY() + endPoint.getY() - (clickedItem.getHeight() / 2))
+						endPoint.setLocation(startPoint.getX() + endPoint.getX() - zoneLoc.getX(), startPoint.getY() + endPoint.getY() - zoneLoc.getY())
 						lineTo(endPoint)
 					}
 	
 				case e2:MousePressed =>
 					requestFocusInWindow()
-					if (myRIL.mouseClickedZone == eRLZOutputHandle)
+					if (myRIL.mouseClickedZone != eRLZBody)
 					{
+						var	zoneLoc: Point = myRIL.getZoneLocation(myRIL.mouseClickedZone)
+
 						connectDragging = true;
-						clickedItem = e.source
+						clickedItem = myRIL
 						startPoint = e2.point
-						startPoint.setLocation(clickedItem.location.getX() + clickedItem.getWidth, clickedItem.location.getY() + clickedItem.getHeight / 2)
+						startPoint.setLocation(clickedItem.location.getX() + zoneLoc.getX(), clickedItem.location.getY() + zoneLoc.getY())
 			  			requestFocusInWindow()
 //			  			println("click loc: " + e2.point)
 //			  			println("startPoint: " + startPoint)
@@ -125,20 +129,21 @@ class StagePanel extends NULLPanel
 					{
 						var endPoint = e2.point
 						var releasedItem: RepositoryItemLabel = null
+						var clickedZoneLoc: Point = clickedItem.getZoneLocation(clickedItem.mouseClickedZone)
 
-						endPoint.setLocation(startPoint.getX() + endPoint.getX() - clickedItem.getWidth(), startPoint.getY() + endPoint.getY() - (clickedItem.getHeight() / 2))
+						endPoint.setLocation(startPoint.getX() + endPoint.getX() - clickedZoneLoc.x, startPoint.getY() + endPoint.getY() - clickedZoneLoc.y)
 
 						releasedItem = getComponentHere(endPoint)
-						if (releasedItem != null)
+						if ((releasedItem != null) && (releasedItem != clickedItem))
 						{
-							clickedItem.nextOutputChainLabel = releasedItem
-							clickedItem.getProcessNode.addOutputConnection(releasedItem.getProcessNode)
-							releasedItem.getProcessNode.addInputConnection(clickedItem.getProcessNode)
+							releasedItem.addInputConnection(clickedItem)
+							clickedItem.addOutputConnection(releasedItem, clickedItem.mouseClickedZone)
 						}
 						path = new geom.GeneralPath
 						repaint()
 					}
 					dragstart = null
+					clickedItem = null
 					connectDragging = false
 			}
 
@@ -208,7 +213,7 @@ class StagePanel extends NULLPanel
 
 	override def paintComponent(g: Graphics2D)
 	{
-		g.clearRect(0, 0, this.bounds.getWidth.toInt, this.bounds.getHeight.toInt)
+//		g.clearRect(0, 0, this.bounds.getWidth.toInt, this.bounds.getHeight.toInt)
 		super.paintComponent(g)
 		g.setColor(new Color(100,100,100))
 //		g.drawString("Press left mouse button and drag to paint." + 
@@ -228,20 +233,31 @@ class StagePanel extends NULLPanel
 			}
 			if (rilItem != null)
 			{
-				var outputRLItem: RepositoryItemLabel = rilItem.nextOutputChainLabel
-				if (outputRLItem != null)
+				var outputRLList: ListBuffer[RepositoryItemLabel] = rilItem.getAllOutputs()
+//				var outputRLItem: RepositoryItemLabel = rilItem.outputChainLabel
+//				var outputRLItem: RepositoryItemLabel = null
+				for (outputRLItem <- outputRLList)
 				{
-					var startPt: Point = rilItem.peer.getLocation()
-					var	endPt: Point = outputRLItem.peer.getLocation()
+//					var outputRLItem: RepositoryItemLabel = _
+//				}
+					if (outputRLItem != null)
+					{
+						var startPt: Point = rilItem.peer.getLocation()
+						var	endPt: Point = outputRLItem.peer.getLocation()
+	//					var	startZoneLoc: Point = rilItem.getZoneLocation(eRLZOutputHandle)
+						var	startZoneLoc: Point = rilItem.getZoneLocationByConnectedItem(outputRLItem)
+	//					var	endZoneLoc: Point = outputRLItem.getZoneLocation(eRLZInputHandle)
+						var	endZoneLoc: Point = outputRLItem.getZoneLocation(eRLZInputHandle)
 	
-					startPt.x += rilItem.peer.getWidth() - 1
-					startPt.y += rilItem.peer.getHeight() / 2
+						startPt.x += startZoneLoc.x
+						startPt.y += startZoneLoc.y
 	
-					endPt.x += 1
-					endPt.y += outputRLItem.peer.getHeight() / 2
+						endPt.x += endZoneLoc.x
+						endPt.y += endZoneLoc.y
 	
-					connectionPath.moveTo(startPt.x, startPt.y)
-					connectionPath.lineTo(endPt.x, endPt.y)
+						connectionPath.moveTo(startPt.x, startPt.y)
+						connectionPath.lineTo(endPt.x, endPt.y)
+					}
 				}
 			}
 		}
