@@ -18,7 +18,7 @@ object rlObjectListMaker
 {
 	var	rlObjectList: ListBuffer[ProcessNode] = ListBuffer[ProcessNode]()
 //	var	rlList: ListBuffer[RepositoryLabel] = ListBuffer[RepositoryLabel]()
-
+/*
 	addToList(1, eRLSection, "Repository")
 	addToList(2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 1)
 	addToList(3, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", 2)
@@ -34,13 +34,14 @@ object rlObjectListMaker
 
 	addToList(12, eRLSection , "Output")
 	addToList(13, eRLItem, "Tweet", "Tweet a message via a Twitter account", 10)
-
+*/
 	addToList(1, eRLSection , "---------------------")
 	addToList(2, eRLSection , "Repository")
 	addToList(3, eRLSection , "---------------------")
-	addToList(4, eRLItem, "Start", "Start node", 1)
-	addToList(5, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", 2)
-	addToList(6, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", 3)
+//	addToList(4, eRLItem, "Start", "Start node", 1)
+	addToList(5, eRLSensorConn , "Sensor Conn.", "Connect a sensor", 2)
+	addToList(22, eRLSensorConn, "Sensor Disconn.", "Disconnect a sensor", 13)
+	addToList(6, eRLSensorReadWrite , "Sensor Read/Write", "Read from or write to a connected sensor", 3)
 	addToList(7, eRLItem, "Sensor Group Conn.", "Connect or disconnect a group of sensors", 4)
 	addToList(8, eRLItem, "Sensor Group Read/Write", "Read from or write to a group of connected sensors", 5)
 	addToList(9, eRLSection , "---------------------")
@@ -93,7 +94,17 @@ object IoTGUIApp extends SimpleSwingApplication
 			{
 				case `eRLSection` => new RepositorySectionLabel(rlItem.riName)
 				case `eRLItem` => new RepositoryItemLabel(rlItem.riName)
+				case `eRLSensorConn` => new RIL_SensorConnection(rlItem.riName)
+				case `eRLSensorReadWrite` => new RIL_SensorReadWrite(rlItem.riName)
+				case `eRLGroupConn` => new RIL_SensorGroupConnection(rlItem.riName)
+				case `eRLGroupReadWrite` => new RIL_SensorGroupReadWrite(rlItem.riName)
 				case `eRLIfThenElse` => new RIL_IfThenElse(rlItem.riName)
+				case `eRLFor` => new RIL_For(rlItem.riName)
+				case `eRLWhile` => new RIL_While(rlItem.riName)
+				case `eRLEnd` => new RIL_End(rlItem.riName)
+				case `eRLWait` => new RIL_Wait(rlItem.riName)
+				case `eRLTweet` => new RIL_Tweet(rlItem.riName)
+				case _ => new RepositoryItemLabel(rlItem.riName)
 			}
 			myRepoLabel.setProcessNode(rlItem)
 			repositoryLabelList += myRepoLabel
@@ -132,13 +143,16 @@ object IoTGUIApp extends SimpleSwingApplication
 			{
 				text = "RUN"
             }
-            add(button,500,50)
+            add(button,40,5)
             listenTo(button)
 
             reactions += {
             case ButtonClicked(button) =>
                  println("Event Trigerred:")
-                 background=java.awt.Color.GREEN
+//                 background=java.awt.Color.GREEN
+
+                 runProcesses
+/*
                  var processnode1= new iotGUI.ExecutionEngine.ProcessNode_Sensor()
                  var connect1=processnode1.ConnectSensor
                  println(connect1)
@@ -149,6 +163,8 @@ object IoTGUIApp extends SimpleSwingApplication
                 	 printf("Error Occured while connecting to sensor")
                 	 sys.exit
                  }
+
+*/
             }
 		}
 
@@ -156,6 +172,14 @@ object IoTGUIApp extends SimpleSwingApplication
 //		leftComponent = repositoryPanel
 //		rightComponent = stagePanel
 		rightComponent = new ScrollPane(stagePanel)
+
+		def runProcesses()
+		{
+			var processHeads: ListBuffer[RepositoryItemLabel] = stagePanel.getProcessHeads
+
+			for (processHead <- processHeads)
+				processHead.getProcessNode.processNode
+		}
 	}
 
 	def top = new MainFrame

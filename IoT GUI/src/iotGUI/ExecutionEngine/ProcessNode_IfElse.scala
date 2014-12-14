@@ -28,7 +28,7 @@ class ProcessNode_IfElse extends ProcessNode
     // This is where the process runs
     override def processNode(): ProcessNode =
     {
-		println("Executing if/then/else node")
+//		println("Executing if/then/else node")
 
 /*
 		// check for IfConditon and ElseCondition

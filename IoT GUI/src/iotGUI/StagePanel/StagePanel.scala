@@ -201,6 +201,29 @@ class StagePanel extends NULLPanel
 		selectedRL = inRL
 	}
 
+	def getProcessHeads(): ListBuffer[RepositoryItemLabel] =
+	{
+		var rilItem: RepositoryItemLabel = null
+		var outputRLList: ListBuffer[RepositoryItemLabel] = new ListBuffer[RepositoryItemLabel]
+
+		connectionPath = new geom.GeneralPath
+		for (thing <- contents)
+		{
+			rilItem = thing match
+			{
+				case x:RepositoryItemLabel => x
+				case _ => null
+			}
+			if (rilItem != null)
+			{
+				if (rilItem.inputChainLabel == null)
+					outputRLList += rilItem
+			}
+		}
+
+		return outputRLList
+	}
+
 	def lineTo(p: Point)
 	{
 		path = new geom.GeneralPath

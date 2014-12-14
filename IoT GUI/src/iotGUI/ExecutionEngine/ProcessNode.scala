@@ -64,11 +64,27 @@ class ProcessNode
 				println("Connecting to sensor")
 			case 3 =>
 				println("Reading from sensor")
+			case 4 =>
+				println("Connecting to sensor group")
+			case 5 =>
+				println("Reading from sensor group")
+			case 6 =>
+				println("Executing if/then/else node")
+			case 7 =>
+				println("Executing for node")
+			case 8 =>
+				println("Executing while node")
+			case 9 =>
+				println("Executing end node")
+			case 10 =>
+				println("Pausing for XXX seconds...")
 			case 11 =>
 				println("Sending tweet")
 				OutputNode_Twitter.SendTweet("Alert!")
 			case 12 =>
 				println("Debug output")
+			case 13 =>
+				println("Disonnecting from sensor")
 			case _ =>
 				println("Executing process node")
 		}

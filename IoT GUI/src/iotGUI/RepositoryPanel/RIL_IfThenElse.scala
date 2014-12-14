@@ -16,6 +16,7 @@ import eRLZoneType._
 
 class RIL_IfThenElse(inText: String, inBorderWeight: Int = 1) extends RepositoryItemLabel(inText, inBorderWeight)
 {
+	var conditionStmt: String = ""
   var _uID: Long = 0
   var _rLType: String = null
   var _rLName: String = null
@@ -125,18 +126,18 @@ class RIL_IfThenElse(inText: String, inBorderWeight: Int = 1) extends Repository
 		var	tempSensorList = Array[Object]("Temp01", "Temp02", "Gas01", "Gas02")
 //		var longMessage = "This is a long text message that I would like to display inside a dialog.  Let's see if it works.  It seems to be OK as long as Java is used for the dialog and components; however, in Scala it does not work."
 
-//        textArea.setText(longMessage)
+        textArea.setText(conditionStmt)
 
-		var myDialog: JDialog = new JDialog
-		myDialog.setVisible(true)
-/*
+//		var myDialog: JDialog = new JDialog
+//		myDialog.setVisible(true)
 		var answer = Dialog.showMessage(this,
-			myJPanel,
+			textArea,
 	        "Select sensor",
 	        Message.Plain,
 	        null/*,
 	        tempSensorList,
 			tempSensorList(2)*/);
-*/
+		println("answer is " + answer)
+		conditionStmt = textArea.getText()
 	}
 }

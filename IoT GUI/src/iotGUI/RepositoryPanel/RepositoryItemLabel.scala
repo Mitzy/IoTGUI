@@ -169,7 +169,8 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 	import iotGUI._
 	def promptForParameters()
 	{
-		var	tempSensorList = Array[Object]("Temp01", "Temp02", "Gas01", "Gas02")
+//		var	tempSensorList = Array[Object]("Temp01", "Temp02", "Gas01", "Gas02")
+		var	tempSensorList = Array[Object]("")
 		// create a simple JPanel
 //		var panel: BoxPanel = new BoxPanel(Orientation.Vertical)
 		var panel: NULLPanel = new NULLPanel
@@ -263,7 +264,7 @@ class RepositoryItemLabel(inText: String, inBorderWeight: Int = 1) extends Repos
 	        Message.Plain,
 	        null,
 	        tempSensorList,
-			tempSensorList(2));
+			tempSensorList(0));
 
 //		JOptionPane.showMessageDialog(this.peer, panel);
 
