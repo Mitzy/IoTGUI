@@ -4,7 +4,7 @@
 package iotGUI
 
 import swing._
-import iotGUI.RepositoryPanel.RepositoryLabel
+//import RepositoryPanel.RepositoryLabel
 
 /**
  * @author Robert Abatecola

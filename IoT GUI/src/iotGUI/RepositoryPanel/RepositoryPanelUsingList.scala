@@ -1,9 +1,5 @@
-/**
- *
- */
 package iotGUI.RepositoryPanel
 
-//import scala.swing.Swing
 import scala.swing._
 //import scala.swing.event._
 import javax.swing.JComponent
@@ -54,9 +50,9 @@ class RepositoryPanelUsingList[RepositoryLabel](items: Seq[RepositoryLabel]) ext
 
 class myRPTransferHandler extends TransferHandler
 {
-	var	myRP: RepositoryPanelUsingList[iotGUI.RepositoryPanel.RepositoryLabel] = null
+	var	myRP: RepositoryPanelUsingList[RepositoryLabel] = null
 
-	def this(inRP: RepositoryPanelUsingList[iotGUI.RepositoryPanel.RepositoryLabel])
+	def this(inRP: RepositoryPanelUsingList[RepositoryLabel])
 	{
 		this()
 		myRP = inRP

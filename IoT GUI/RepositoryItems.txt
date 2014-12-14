@@ -1,13 +1,13 @@
 1, eRLSection , "Repository"
-2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", “RIL_SensorConnection”
-3, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", “RIL_SensorReadWrite”
-4, eRLItem, "Sensor Group Conn.", "Connect or disconnect a group of sensors", “RIL_SensorGroupConnection”
-5, eRLItem, "Sensor Group Read/Write", "Read from or write to a group of connected sensors", “RIL_SensorGroupReadWrite”
+2, eRLItem, "Sensor Conn.", "Connect or disconnect a sensor", "RIL_SensorConnection"
+3, eRLItem, "Sensor Read/Write", "Read from or write to a connected sensor", "RIL_SensorReadWrite"
+4, eRLItem, "Sensor Group Conn.", "Connect or disconnect a group of sensors", "RIL_SensorGroupConnection"
+5, eRLItem, "Sensor Group Read/Write", "Read from or write to a group of connected sensors", "RIL_SensorGroupReadWrite"
 6, eRLSection , "Flow Control"
-7, eRLItem, "If...then...else", "\"If...then...else\" flow control", “RIL_IfThenElse”
-8, eRLItem, "For", "\"For\" flow control", “RIL_For”
-9, eRLItem, "While", "\"While\" flow control", “RIL_While”
-10, eRLItem, "End", "End block to mark termination of a loop or If statement", “RIL_End”
-11, eRLItem, "Wait", "Pause for a specified amount of time before continuing", “RIL_Wait”
+7, eRLItem, "If...then...else", "\"If...then...else\" flow control", "RIL_IfThenElse"
+8, eRLItem, "For", "\"For\" flow control", "RIL_For"
+9, eRLItem, "While", "\"While\" flow control", "RIL_While"
+10, eRLItem, "End", "End block to mark termination of a loop or If statement", "RIL_End"
+11, eRLItem, "Wait", "Pause for a specified amount of time before continuing", "RIL_Wait"
 12, eRLSection , "Output"
-13, eRLItem, "Tweet", "Tweet a message via a Twitter account", “RIL_Tweet”
+13, eRLItem, "Tweet", "Tweet a message via a Twitter account", "RIL_Tweet"

@@ -1,6 +1,3 @@
-/**
- *
- */
 package iotGUI.RepositoryPanel
 
 import scala.swing._

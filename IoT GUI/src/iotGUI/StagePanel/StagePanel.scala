@@ -7,10 +7,9 @@ import javax.swing.TransferHandler
 import javax.swing.TransferHandler._
 import scala.collection.mutable.ListBuffer
 import java.awt.{Color, geom}
-import iotGUI.RepositoryPanel._
 import iotGUI.NULLPanel
-import iotGUI.ExecutionEngine._
-import eRLZoneType._
+import iotGUI.RepositoryPanel._
+import iotGUI.RepositoryPanel.eRLZoneType._
 //import com.sun.jmx.mbeanserver.Repository
 //import com.sun.org.apache.bcel.internal.util.Repository
 //import java.lang.Boolean

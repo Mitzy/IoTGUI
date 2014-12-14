@@ -7,10 +7,11 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.runtime
 import scala.tools.reflect.ToolBox
 import scala.swing.event._
+//import iotGUI.RepositoryPanel
 import iotGUI.RepositoryPanel._
+//import iotGUI.StagePanel
 import iotGUI.StagePanel._
 import iotGUI.ExecutionEngine._
-
 import iotGUI.ExecutionEngine.eRLType._
 
 // Input module should return ListBuffer[cRLObject] that is created in the same way as in rlObjectListMaker

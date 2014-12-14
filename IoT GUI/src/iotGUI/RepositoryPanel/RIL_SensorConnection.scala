@@ -1,7 +1,7 @@
 package iotGUI.RepositoryPanel
 
 //remove if not needed
-import scala.collection.JavaConversions._
+//import scala.collection.JavaConversions._
 
 class RIL_SensorConnection(inText: String, inBorderWeight: Int = 1) extends RepositoryItemLabel(inText, inBorderWeight) {
 
